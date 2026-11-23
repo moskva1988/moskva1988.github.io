@@ -48,7 +48,7 @@
 //             a small link below tries to open a wallet app, which not every phone has
 const WAYS = [
   { title: "Bank card or SBP", note: "A card of any country, or SBP. The payment page opens in the browser.",
-    urls: { apps: "", seafarers: "https://web.tribute.tg/d/UN7" },
+    urls: { apps: "https://web.tribute.tg/d/UN4", seafarers: "https://web.tribute.tg/d/UN7" },
     alts: { apps: "", seafarers: "https://t.me/tribute/app?startapp=dUN7" }, altText: "or pay inside Telegram" },
   // Stars go to the pinned post of the channel of the person's list: fill in both links (t.me/<channel>/<post>)
   { title: "Telegram Stars", note: "Opens the channel in Telegram: tap the star under the pinned post.",
@@ -67,7 +67,7 @@ const app = known ? known.name : "";
 const asked = new URLSearchParams(location.search).get("group") || "";
 const group = known ? known.group : (GROUPS.includes(asked) ? asked : "");
 const link = w => (w.urls ? (w.urls[group] || w.urls.apps || "") : (w.url || "")).trim();
-const second = w => (w.alts ? (w.alts[group] || w.alts.apps || "") : "").trim();
+const second = w => (w.alts ? (w.alts[group] || "") : "").trim();
 if (app) {
   document.getElementById("title").textContent = "Support " + app;
   document.getElementById("lead").textContent = app + " is free. If it helps you, you can support the author.";
