@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Support the author</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { --bg:#f4f7fb; --card:#ffffff; --text:#1f2937; --soft:#6b7280; --line:#d5dbe5; --blue:#3b82f6; --blue-dark:#2563eb; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0f172a; --card:#1e293b; --text:#e5e7eb; --soft:#9ca3af; --line:#334155; --blue:#3b82f6; --blue-dark:#60a5fa; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text);
+         font: 16px/1.5 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  main { max-width: 520px; margin: 0 auto; padding: 28px 16px 48px; }
+  h1 { font-size:26px; margin:0 0 6px; text-align:center; }
+  .lead { color:var(--soft); margin:0 0 22px; text-align:center; }
+  .way { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px; margin:0 0 12px; }
+  .way h2 { font-size:17px; margin:0 0 2px; }
+  .way p { color:var(--soft); font-size:14px; margin:0 0 12px; }
+  .open { display:block; text-align:center; background:var(--blue); color:#fff; text-decoration:none;
+          font-weight:600; padding:12px; border-radius:10px; }
+  .open:hover { filter:brightness(1.08); }
+  .address { display:flex; gap:8px; margin-top:10px; }
+  .address code { flex:1; min-width:0; overflow-wrap:anywhere; font-size:12px; padding:8px 10px;
+                  border:1px solid var(--line); border-radius:10px; background:var(--bg); }
+  .address button { font:inherit; font-size:14px; font-weight:600; color:var(--blue-dark); background:none;
+                    border:1px solid var(--line); border-radius:10px; padding:0 14px; }
+  .empty { text-align:center; color:var(--soft); padding:24px 8px; }
+  footer { color:var(--soft); font-size:13px; margin-top:24px; text-align:center; }
+  a { color:var(--blue-dark); }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">Support the author</h1>
+  <p class="lead" id="lead">These programs are free. If one of them helps you, you can support the author.</p>
+  <div id="ways"></div>
+  <footer><a href="../">All programs</a></footer>
+</main>
+<script>
+// ---- The ways to support. To change them: edit this list, then run tools/publish_support.sh ----
+// A way is shown when it has a link (url) or an address; an empty one is left out.
+//   url     — what the button opens: a payment page, a Telegram bot, a transfer link
+//   address — a wallet address in the TON network: the button opens the wallet, the address can be copied
+const WAYS = [
+  { title: "Bank card", note: "Any card. The payment page opens in the browser.", url: "" },
+  { title: "Telegram",  note: "Opens the support bot in Telegram.",               url: "" },
+  { title: "Wallet",    note: "Gram or USDT in the TON network.",                 address: "" },
+  { title: "MarTrust",  note: "Crew-to-Crew: a free transfer between MarTrust accounts.", url: "" },
+];
+// ---- The programs that send people here: page.../support/?app=<key> ----
+const APPS = { tuchka: "Tuchka" };
+
+const key = new URLSearchParams(location.search).get("app") || "";
+const app = Object.prototype.hasOwnProperty.call(APPS, key) ? APPS[key] : "";   // only a name from the list is shown
+if (app) {
+  document.getElementById("title").textContent = "Support " + app;
+  document.getElementById("lead").textContent = app + " is free. If it helps you, you can support the author.";
+  document.title = "Support " + app;
+}
+const box = document.getElementById("ways");
+const shown = WAYS.filter(w => (w.url || "").trim() || (w.address || "").trim());
+if (!shown.length) {
+  const p = document.createElement("p");
+  p.className = "empty";
+  p.textContent = "The ways to support are being set up. Thank you for wanting to help — please look in again soon.";
+  box.appendChild(p);
+}
+for (const w of shown) {
+  const address = (w.address || "").trim();
+  const card = document.createElement("section");
+  card.className = "way";
+  const h = document.createElement("h2"); h.textContent = w.title; card.appendChild(h);
+  const n = document.createElement("p"); n.textContent = w.note || ""; card.appendChild(n);
+  const a = document.createElement("a");
+  a.className = "open";
+  a.href = address ? "ton://transfer/" + encodeURIComponent(address) : w.url.trim();
+  a.rel = "noopener";
+  a.textContent = address ? "Open in the wallet" : "Open";
+  card.appendChild(a);
+  if (address) {
+    const row = document.createElement("div"); row.className = "address";
+    const code = document.createElement("code"); code.textContent = address; row.appendChild(code);
+    const b = document.createElement("button"); b.type = "button"; b.textContent = "Copy";
+    b.onclick = () => navigator.clipboard.writeText(address).then(() => { b.textContent = "Copied"; });
+    row.appendChild(b);
+    card.appendChild(row);
+  }
+  box.appendChild(card);
+}
+</script>
+</body>
+</html>
