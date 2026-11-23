@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Updates</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { --bg:#f4f7fb; --card:#ffffff; --text:#1f2937; --soft:#6b7280; --line:#d5dbe5; --blue:#3b82f6; --blue-dark:#2563eb; --good:#15803d; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0f172a; --card:#1e293b; --text:#e5e7eb; --soft:#9ca3af; --line:#334155; --blue:#3b82f6; --blue-dark:#60a5fa; --good:#4ade80; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text);
+         font: 16px/1.5 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  main { max-width: 520px; margin: 0 auto; padding: 28px 16px 48px; }
+  h1 { font-size:26px; margin:0 0 18px; text-align:center; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 16px; margin:0 0 12px; }
+  .state { font-size:18px; font-weight:600; margin:0 0 4px; }
+  .state.good { color:var(--good); }
+  .soft { color:var(--soft); font-size:14px; margin:0; }
+  .open { display:block; text-align:center; background:var(--blue); color:#fff; text-decoration:none;
+          font-weight:600; padding:12px; border-radius:10px; margin-top:14px; }
+  .links { font-size:14px; display:flex; flex-wrap:wrap; gap:8px 18px; margin-top:20px; justify-content:center; }
+  a { color:var(--blue-dark); }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">Updates</h1>
+  <div class="card">
+    <p class="state" id="state">Looking for the latest version…</p>
+    <p class="soft" id="detail"></p>
+    <a class="open" id="get" href="../" hidden>Get the latest version</a>
+  </div>
+  <p class="soft" style="text-align:center">To update, download the new file and put it in place of the old one.
+    Your data stays as it is.</p>
+  <div class="links"><a id="channel" href="../">News in Telegram</a><a id="page" href="../">About the program</a></div>
+</main>
+<script>
+// ---- The programs: where each is given out and where its news are. Run tools/publish_support.sh after a change ----
+const APPS = {
+  tuchka: { name: "Tuchka", releases: "moskva1988/tuchka-app", page: "../tuchka-app/", channel: "https://t.me/handyfreeapps" },
+};
+const q = new URLSearchParams(location.search);
+const key = q.get("app") || "";
+const app = Object.prototype.hasOwnProperty.call(APPS, key) ? APPS[key] : null;
+const mine = /^\d+(\.\d+){1,3}$/.test(q.get("v") || "") ? q.get("v") : "";      // only a plain version number is shown
+const state = document.getElementById("state"), detail = document.getElementById("detail"), get = document.getElementById("get");
+const newer = (a, b) => {                                   // is version a newer than b?
+  const x = a.split(".").map(Number), y = b.split(".").map(Number);
+  for (let i = 0; i < Math.max(x.length, y.length); i++) {
+    if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) > (y[i] || 0);
+  }
+  return false;
+};
+if (!app) {
+  state.textContent = "Choose your program in the list";
+  get.hidden = false; get.textContent = "All programs";
+  document.getElementById("channel").hidden = true; document.getElementById("page").hidden = true;
+} else {
+  document.title = app.name + " updates";
+  document.getElementById("title").textContent = app.name + " updates";
+  document.getElementById("channel").href = app.channel;
+  document.getElementById("page").href = app.page;
+  get.href = app.page;
+  fetch("https://api.github.com/repos/" + app.releases + "/releases/latest")
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(d => {
+      const latest = String(d.tag_name || "").replace(/^v/, "");
+      if (!/^\d+(\.\d+){1,3}$/.test(latest)) throw 0;
+      if (mine && !newer(latest, mine)) {
+        state.textContent = "You have the latest version"; state.className = "state good";
+        detail.textContent = "Version " + mine + ".";
+      } else {
+        state.textContent = "Version " + latest + " is out";
+        detail.textContent = mine ? "You have " + mine + "." : "";
+        get.hidden = false; get.textContent = "Get version " + latest;
+      }
+    })
+    .catch(() => {
+      state.textContent = "Could not look up the latest version";
+      detail.textContent = mine ? "You have " + mine + ". Compare it with the one on the page of the program." : "";
+      get.hidden = false; get.textContent = "Open the page of the program";
+    });
+}
+</script>
+</body>
+</html>
