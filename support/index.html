@@ -22,11 +22,10 @@
   .open { display:block; text-align:center; background:var(--blue); color:#fff; text-decoration:none;
           font-weight:600; padding:12px; border-radius:10px; }
   .open:hover { filter:brightness(1.08); }
-  .address { display:flex; gap:8px; margin-top:10px; }
-  .address code { flex:1; min-width:0; overflow-wrap:anywhere; font-size:12px; padding:8px 10px;
-                  border:1px solid var(--line); border-radius:10px; background:var(--bg); }
-  .address button { font:inherit; font-size:14px; font-weight:600; color:var(--blue-dark); background:none;
-                    border:1px solid var(--line); border-radius:10px; padding:0 14px; }
+  .address { display:block; overflow-wrap:anywhere; font-size:13px; padding:10px 12px; margin:0 0 10px;
+             border:1px solid var(--line); border-radius:10px; background:var(--bg); }
+  button.open { width:100%; border:0; font:inherit; font-weight:600; cursor:pointer; }
+  .other { display:block; text-align:center; font-size:14px; margin-top:12px; }
   .empty { text-align:center; color:var(--soft); padding:24px 8px; }
   footer { color:var(--soft); font-size:13px; margin-top:24px; text-align:center; }
   a { color:var(--blue-dark); }
@@ -43,11 +42,12 @@
 // ---- The ways to support. To change them: edit this list, then run tools/publish_support.sh ----
 // A way is shown when it has a link (url) or an address; an empty one is left out.
 //   url     — what the button opens: a payment page, a Telegram bot, a transfer link
-//   address — a wallet address in the TON network: the button opens the wallet, the address can be copied
+//   address — a wallet address in the TON network: the button copies it (that works with every wallet);
+//             a small link below tries to open a wallet app, which not every phone has
 const WAYS = [
   { title: "Bank card", note: "Any card. The payment page opens in the browser.", url: "" },
   { title: "Telegram",  note: "Opens the support bot in Telegram.",               url: "" },
-  { title: "Wallet",    note: "Gram or USDT in the TON network.",                 address: "UQAuhP3cdheYicjW3ZX2KDj_34evsdtspHmOKvJangmu-b6Q" },
+  { title: "Wallet",    note: "Send Gram or USDT in the TON network to this address, from any wallet.", address: "UQAuhP3cdheYicjW3ZX2KDj_34evsdtspHmOKvJangmu-b6Q" },
   { title: "MarTrust",  note: "Crew-to-Crew: a free transfer between MarTrust accounts.", url: "" },
 ];
 // ---- The programs that send people here: page.../support/?app=<key> ----
@@ -74,19 +74,21 @@ for (const w of shown) {
   card.className = "way";
   const h = document.createElement("h2"); h.textContent = w.title; card.appendChild(h);
   const n = document.createElement("p"); n.textContent = w.note || ""; card.appendChild(n);
-  const a = document.createElement("a");
-  a.className = "open";
-  a.href = address ? "ton://transfer/" + encodeURIComponent(address) : w.url.trim();
-  a.rel = "noopener";
-  a.textContent = address ? "Open in the wallet" : "Open";
-  card.appendChild(a);
   if (address) {
-    const row = document.createElement("div"); row.className = "address";
-    const code = document.createElement("code"); code.textContent = address; row.appendChild(code);
-    const b = document.createElement("button"); b.type = "button"; b.textContent = "Copy";
+    const code = document.createElement("code"); code.className = "address"; code.textContent = address;
+    card.appendChild(code);
+    const b = document.createElement("button"); b.type = "button"; b.className = "open";
+    b.textContent = "Copy the address";
     b.onclick = () => navigator.clipboard.writeText(address).then(() => { b.textContent = "Copied"; });
-    row.appendChild(b);
-    card.appendChild(row);
+    card.appendChild(b);
+    const a = document.createElement("a"); a.className = "other";
+    a.href = "ton://transfer/" + encodeURIComponent(address);
+    a.textContent = "or open it in a wallet app";
+    card.appendChild(a);
+  } else {
+    const a = document.createElement("a"); a.className = "open";
+    a.href = w.url.trim(); a.rel = "noopener"; a.textContent = "Open";
+    card.appendChild(a);
   }
   box.appendChild(card);
 }
