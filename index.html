@@ -13,22 +13,27 @@
   body { margin:0; background:var(--bg); color:var(--text);
          font: 16px/1.5 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
   main { max-width: 520px; margin: 0 auto; padding: 28px 16px 48px; }
-  h1 { font-size:26px; margin:0 0 18px; }
+  h1 { font-size:26px; margin:0 0 6px; }
+  .lead { color:var(--soft); margin:0 0 18px; }
   .app { display:flex; gap:14px; align-items:center; background:var(--card); border:1px solid var(--line);
          border-radius:14px; padding:14px 16px; margin:0 0 12px; color:inherit; text-decoration:none; }
   .app img { width:48px; height:48px; flex:none; }
   .app b { display:block; font-size:17px; }
   .app span { color:var(--soft); font-size:14px; }
-  footer { margin-top:24px; font-size:14px; }
+  .empty { color:var(--soft); background:var(--card); border:1px dashed var(--line); border-radius:14px; padding:18px 16px; }
+  footer { margin-top:24px; font-size:14px; display:flex; flex-wrap:wrap; gap:8px 18px; }
   a { color:var(--blue-dark); }
 </style>
 </head>
 <body>
 <main>
   <h1>Free programs</h1>
-  <a class="app" href="tuchka-app/">
-    <img src="tuchka.png" alt="">
-    <div><b>Tuchka</b><span>Keeps your passwords and types them into the browser in one click. Windows.</span></div>
+  <p class="lead">Small programs without ads or accounts. Choose your list.</p>
+  <a class="app" href="apps/">
+    <div><b>For everyone</b><span>Everyday tools for a Windows computer.</span></div>
+  </a>
+  <a class="app" href="seafarers/">
+    <div><b>For seafarers</b><span>Tools for work on board and ashore.</span></div>
   </a>
   <footer><a href="support/">Support the author</a></footer>
 </main>

@@ -36,32 +36,42 @@
   <h1 id="title">Support the author</h1>
   <p class="lead" id="lead">These programs are free. If one of them helps you, you can support the author.</p>
   <div id="ways"></div>
-  <footer><a href="../">All programs</a></footer>
+  <footer><a href="../" id="back">All programs</a></footer>
 </main>
 <script>
 // ---- The ways to support. To change them: edit this list, then run tools/publish_support.sh ----
 // A way is shown when it has a link (url) or an address; an empty one is left out.
 //   url     — what the button opens: a payment page, a Telegram bot, a transfer link
+//   urls    — the same, but its own link for each list of programs (see GROUPS)
 //   address — a wallet address in the TON network: the button copies it (that works with every wallet);
 //             a small link below tries to open a wallet app, which not every phone has
 const WAYS = [
   { title: "Bank card", note: "Any card. The payment page opens in the browser.", url: "" },
-  { title: "Telegram",  note: "Opens the support bot in Telegram.",               url: "" },
+  // Stars go to the pinned post of the channel of the person's list: fill in both links (t.me/<channel>/<post>)
+  { title: "Telegram Stars", note: "Opens the channel in Telegram: tap the star under the pinned post.",
+    urls: { apps: "", seafarers: "" } },
   { title: "Wallet",    note: "Send Gram or USDT in the TON network to this address, from any wallet.", address: "UQAuhP3cdheYicjW3ZX2KDj_34evsdtspHmOKvJangmu-b6Q" },
   { title: "MarTrust",  note: "For seafarers with a MarTrust Account: a free Crew-to-Crew transfer.", url: "https://martrust.me/4cbbt6vfyc" },
 ];
 // ---- The programs that send people here: page.../support/?app=<key> ----
-const APPS = { tuchka: "Tuchka" };
+// Each program belongs to one of the two lists; a list page sends people here as ?group=<list>.
+const APPS = { tuchka: { name: "Tuchka", group: "apps" } };
+const GROUPS = ["apps", "seafarers"];
 
 const key = new URLSearchParams(location.search).get("app") || "";
-const app = Object.prototype.hasOwnProperty.call(APPS, key) ? APPS[key] : "";   // only a name from the list is shown
+const known = Object.prototype.hasOwnProperty.call(APPS, key) ? APPS[key] : null;   // only a name from the list is shown
+const app = known ? known.name : "";
+const asked = new URLSearchParams(location.search).get("group") || "";
+const group = known ? known.group : (GROUPS.includes(asked) ? asked : "");
+const link = w => (w.urls ? (w.urls[group] || w.urls.apps || "") : (w.url || "")).trim();
 if (app) {
   document.getElementById("title").textContent = "Support " + app;
   document.getElementById("lead").textContent = app + " is free. If it helps you, you can support the author.";
   document.title = "Support " + app;
 }
+if (group) document.getElementById("back").href = "../" + group + "/";
 const box = document.getElementById("ways");
-const shown = WAYS.filter(w => (w.url || "").trim() || (w.address || "").trim());
+const shown = WAYS.filter(w => link(w) || (w.address || "").trim());
 if (!shown.length) {
   const p = document.createElement("p");
   p.className = "empty";
@@ -87,7 +97,7 @@ for (const w of shown) {
     card.appendChild(a);
   } else {
     const a = document.createElement("a"); a.className = "open";
-    a.href = w.url.trim(); a.rel = "noopener"; a.textContent = "Open";
+    a.href = link(w); a.rel = "noopener"; a.textContent = "Open";
     card.appendChild(a);
   }
   box.appendChild(card);
