@@ -43,10 +43,13 @@
 // A way is shown when it has a link (url) or an address; an empty one is left out.
 //   url     — what the button opens: a payment page, a Telegram bot, a transfer link
 //   urls    — the same, but its own link for each list of programs (see GROUPS)
+//   alts    — a second, smaller link under the button (with altText), also one for each list
 //   address — a wallet address in the TON network: the button copies it (that works with every wallet);
 //             a small link below tries to open a wallet app, which not every phone has
 const WAYS = [
-  { title: "Bank card", note: "Any card. The payment page opens in the browser.", url: "" },
+  { title: "Bank card or SBP", note: "A card of any country, or SBP. The payment page opens in the browser.",
+    urls: { apps: "", seafarers: "https://web.tribute.tg/d/UN7" },
+    alts: { apps: "", seafarers: "https://t.me/tribute/app?startapp=dUN7" }, altText: "or pay inside Telegram" },
   // Stars go to the pinned post of the channel of the person's list: fill in both links (t.me/<channel>/<post>)
   { title: "Telegram Stars", note: "Opens the channel in Telegram: tap the star under the pinned post.",
     urls: { apps: "https://t.me/handyfreeapps/4", seafarers: "https://t.me/FreeAppsSeafarers/4" } },
@@ -64,6 +67,7 @@ const app = known ? known.name : "";
 const asked = new URLSearchParams(location.search).get("group") || "";
 const group = known ? known.group : (GROUPS.includes(asked) ? asked : "");
 const link = w => (w.urls ? (w.urls[group] || w.urls.apps || "") : (w.url || "")).trim();
+const second = w => (w.alts ? (w.alts[group] || w.alts.apps || "") : "").trim();
 if (app) {
   document.getElementById("title").textContent = "Support " + app;
   document.getElementById("lead").textContent = app + " is free. If it helps you, you can support the author.";
@@ -99,6 +103,11 @@ for (const w of shown) {
     const a = document.createElement("a"); a.className = "open";
     a.href = link(w); a.rel = "noopener"; a.textContent = "Open";
     card.appendChild(a);
+    if (second(w)) {
+      const o = document.createElement("a"); o.className = "other";
+      o.href = second(w); o.rel = "noopener"; o.textContent = w.altText || "another way";
+      card.appendChild(o);
+    }
   }
   box.appendChild(card);
 }
