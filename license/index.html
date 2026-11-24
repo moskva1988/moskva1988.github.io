@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Apps License</title>
+<style>
+  :root { --bg:#f4f7fb; --card:#ffffff; --text:#1f2937; --soft:#6b7280; --line:#d5dbe5; --blue-dark:#2563eb; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0f172a; --card:#1e293b; --text:#e5e7eb; --soft:#9ca3af; --line:#334155; --blue-dark:#60a5fa; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text);
+         font: 16px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 28px 16px 48px; }
+  h1 { font-size:26px; margin:0 0 4px; }
+  .soft { color:var(--soft); font-size:14px; margin:0 0 18px; }
+  .short { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin:0 0 22px; }
+  .short p { margin:4px 0; }
+  h2 { font-size:17px; margin:22px 0 4px; }
+  p { margin:0 0 10px; }
+  .contact { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-top:24px; }
+  footer { margin-top:24px; font-size:14px; }
+  a { color:var(--blue-dark); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Free Apps License</h1>
+  <p class="soft">Version 1.0 · 24 November 2026 · Safe Sea Solutions</p>
+  <div class="short">
+    <p><b>In short.</b> Private persons use the programs free of charge.</p>
+    <p>Organisations need a paid license.</p>
+  </div>
+  <p>These terms cover every program published at https://moskva1988.github.io/ (the &quot;Programs&quot;). &quot;The Author&quot; is Safe Sea Solutions, the author and owner of the Programs.</p>
+  <h2>1. Free for individuals</h2>
+  <p>A private person may download, install and use the Programs free of charge for their own needs, on any computer they are allowed to use, including a computer at work, as long as this is their own choice and no organisation provides, requires or pays for it.</p>
+  <h2>2. Organisations need a paid license</h2>
+  <p>A company, shipowner, ship manager, crewing agency, institution or any other organisation may not install, distribute or provide the Programs to its staff, vessels, offices or clients, require their use, or make them part of its work, without a separate written commercial license from the Author.</p>
+  <h2>3. Passing the Programs on</h2>
+  <p>You may give an unchanged copy of a Program to other private persons free of charge. You may not sell or rent the Programs, include them in other products, change them, take them apart, or remove this license or the Author&#x27;s notices.</p>
+  <h2>4. Use without a license</h2>
+  <p>Use by an organisation without a commercial license is an infringement of the Author&#x27;s rights. The Author reserves the right to claim the license fee for the whole period and for every computer the Program was used on, as well as damages and legal costs, to the extent the law allows.</p>
+  <h2>5. Support is voluntary</h2>
+  <p>Donations are gifts. They are not a license fee and give no additional rights.</p>
+  <h2>6. No warranty</h2>
+  <p>The Programs are provided &quot;as is&quot;, without warranties of any kind. To the extent the law allows, the Author is not liable for any loss or damage arising from their use, including loss of data or of access to accounts.</p>
+  <h2>7. Versions of these terms</h2>
+  <p>Each version of a Program is governed by the terms published with it. Later versions may come with different terms.</p>
+  <div class="contact" id="contact">
+    <b>Commercial licenses and questions</b>
+    <p id="how" style="margin:6px 0 0">The contact for organisations will be published on this page.</p>
+  </div>
+  <footer><a href="../">All programs</a></footer>
+</main>
+<script>
+// ---- Where organisations write for a license. Fill in, then run tools/publish_support.sh ----
+const CONTACT = { text: "inquiries@safeseasolutions.com", link: "mailto:inquiries@safeseasolutions.com" };      // e.g. text: "licence@example.com", link: "mailto:licence@example.com"
+if (CONTACT.text) {
+  const how = document.getElementById("how");
+  how.textContent = "Write to ";
+  const a = document.createElement("a"); a.textContent = CONTACT.text; a.href = CONTACT.link || "#";
+  how.appendChild(a);
+}
+</script>
+</body>
+</html>
